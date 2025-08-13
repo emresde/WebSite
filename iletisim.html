@@ -178,6 +178,7 @@
     (location.hostname === '127.0.0.1' || location.hostname === 'localhost')
       ? 'http://127.0.0.1:3000'
       : 'https://website-22dl.onrender.com';
+  console.log('[contact] API_BASE =', API_BASE);
 </script>
 <script>
 const form = document.getElementById("contactForm");
@@ -243,7 +244,24 @@ form.addEventListener("submit", async (e) => {
       body: JSON.stringify(payload),
     });
 
-    const data = await res.json();
+    let data;
+    const ct = res.headers.get('content-type') || '';
+    if (ct.includes('application/json')) {
+      data = await res.json();
+    } else {
+      const raw = await res.text();
+      data = { ok: false, error: 'server_error', raw };
+    }
+
+    if (!res.ok) {
+      // 4xx/5xx durumlarında ağ hatası demeyelim, anlamlı mesaj gösterelim
+      statusBox.className = "status err";
+      statusBox.style.display = "block";
+      statusBox.textContent = data?.error === 'validation_error' ? "Lütfen hatalı alanları düzeltin." : `Gönderilemedi (HTTP ${res.status}).`;
+      // Sunucu döneni konsola yaz
+      console.error('Server response:', data);
+      return;
+    }
 
     if (data.ok) {
       form.reset();
