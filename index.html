@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emre Döşlü</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: url('main_page_backgrounds/main_page_background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .top-row {
+      display: flex;
+      gap: 20px;
+    }
+
+    .box {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 150px;
+      width: 300px;
+      text-align: center;
+    }
+
+    .box:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .box h2 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      color: #ffffff;
+    }
+
+    /* Arka planlar */
+    #ozgecmis {
+      background-image: url('main_page_backgrounds/cv_background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    #sosyal {
+      background-image: url('main_page_backgrounds/sosyal_medya.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    #iletisim {
+      background-image: url('main_page_backgrounds/iletisim_background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* ===== Responsive (tablet/telefon) ===== */
+    @media (max-width: 768px) {
+      .container {
+        gap: 16px;
+        padding: 0 16px;
+      }
+      .top-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .box {
+        width: 100%;
+        max-width: 360px;
+        height: 120px; /* daha kompakt kutular */
+      }
+      .box h2 {
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .box {
+        height: auto;           /* içerik kadar yükseklik */
+        padding: 16px;          /* iç boşluğu biraz azalt */
+      }
+      .box h2 {
+        font-size: 1rem;
+      }
+    }
+
+    /* Hareketi azaltmak isteyen kullanıcılar için: */
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in {
+        animation: none;
+        opacity: 1;
+      }
+    }
+  </style>
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('#ozgecmis').addEventListener('click', function() {
+        window.location.href = 'ozgecmis.html';
+      });
+      document.querySelector('#sosyal').addEventListener('click', function() {
+        window.location.href = 'sosyal.html';
+      });
+      document.querySelector('#iletisim').addEventListener('click', function() {
+        window.location.href = 'iletisim.html';
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="top-row">
+      <div id="ozgecmis" class="box fade-in">
+        <h2>Özgeçmiş</h2>
+      </div>
+      <div id="sosyal" class="box fade-in">
+        <h2>Sosyal Medya</h2>
+      </div>
+    </div>
+    <div id="iletisim" class="box fade-in">
+      <h2>İletişim</h2>
+    </div>
+  </div>
+</body>
+</html>

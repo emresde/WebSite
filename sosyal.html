@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sosyal Medya — Emre Döşlü</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: url('main_page_backgrounds/sosyal_medya.jpg') no-repeat center center fixed; /* kendi resim dosyanın adı */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    } 
+
+    .social-container {
+  background: rgba(0, 0, 0, 0.6); /* yarı saydam siyah */
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  color: #fff; /* yazılar beyaz olsun */
+}
+
+    .social-container h1 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .social-link {
+      background: none;
+      border-radius: 0;
+      width: auto;
+      height: auto;
+      padding: 0;
+      display: inline-block;
+    }
+
+    .social-link img {
+      display: block;
+      height: 64px;
+      width: auto;
+      margin: 0 8px;
+    }
+
+    /* LinkedIn ikonunu 100px genişlikte, yükseklik otomatik */
+    .social-link.linkedin img {
+      width: 100px;
+      height: auto;
+    }
+
+    .back-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      background: #007acc;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .back-button:hover {
+      background: #005fa3;
+    }
+
+    /* ===== Responsive (tablet/telefon) ===== */
+    @media (max-width: 768px) {
+      body { align-items: flex-start; }
+      .social-container {
+        width: 100%;
+        max-width: 480px;
+        margin: 24px 16px;
+        padding: 20px;
+        border-radius: 10px;
+      }
+      .social-links { gap: 12px; }
+      .social-link img { height: 56px; }
+      .social-link.linkedin img { width: 88px; }
+      .back-button { width: 100%; font-size: 16px; padding: 12px 16px; }
+    }
+
+    @media (max-width: 400px) {
+      .social-container { margin: 16px 12px; padding: 16px; }
+      .social-container h1 { font-size: 1.25rem; }
+      .social-link img { height: 48px; }
+      .social-link.linkedin img { width: 72px; }
+    }
+
+    /* Hareketi azaltmak isteyen kullanıcılar için */
+    @media (prefers-reduced-motion: reduce) {
+      .back-button { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="social-container">
+    <h1>Sosyal Medya Hesaplarım</h1>
+    <div class="social-links">
+      <a href="https://www.instagram.com/emresdee/" class="social-link" title="Instagram">
+        <img src="./sosyallogo/instalogo.png" alt="Instagram">
+      </a>
+      <a href="https://www.tiktok.com/@emresdee" class="social-link" title="TikTok">
+        <img src="./sosyallogo/tiktok.png" alt="TikTok">
+      </a>
+      <a href="https://x.com/emresde" class="social-link" title="X">
+        <img src="./sosyallogo/xlogo.png" alt="X (Twitter)">
+      </a>
+      <a href="https://open.spotify.com/user/emresdee" class="social-link spotify" title="Spotify">
+        <img src="./sosyallogo/spotifylogo.png" alt="Spotify">
+      </a>
+      <a href="https://www.linkedin.com/in/emre-döşlü-6240a2221/" class="social-link linkedin" title="LinkedIn">
+        <img src="./sosyallogo/linked.png" alt="LinkedIn">
+      </a>
+    </div>
+    <button class="back-button" onclick="history.back()">Ana Sayfaya Dön</button>
+  </div>
+</body>
+</html>

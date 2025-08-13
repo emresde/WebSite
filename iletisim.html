@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>İletişim</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: url('main_page_backgrounds/iletisim_background.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  .field { margin-bottom: 12px; }
+  .field label { display:block; font-weight:600; margin-bottom:6px; color: #fff; }
+
+  .field input, .field textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .field input[aria-invalid="true"],
+  .field textarea[aria-invalid="true"] {
+    border-color: #e53935;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .error-text { 
+    color: #ff8a80; 
+    font-size: 0.9rem; 
+    margin-top: 6px; 
+    min-height: 1em; 
+  }
+
+  .status {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    display: none;
+  }
+  .status.ok { display: block; background: #e6f4ea; color: #137333; }
+  .status.err { display: block; background: #fdecea; color: #b71c1c; }
+
+  button { 
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 4px; 
+    background: #007acc; 
+    color: #fff; 
+    font-size: 1rem; 
+    cursor: pointer; 
+    transition: background 0.2s; 
+    text-decoration: none;
+  }
+  button:hover { background: #005fa3; }
+  button[disabled]{ opacity: 0.6; cursor: default; }
+
+  .container {
+    max-width: 500px;
+    margin: 50px auto;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .back-button {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background: #007acc;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+  }
+  .back-button:hover {
+    background: #005fa3;
+  }
+
+  /* ===== Responsive (tablet/telefon) ===== */
+  @media (max-width: 768px) {
+    body {
+      /* Küçük ekranlarda dikey kaydırma kenar payı */
+      align-items: flex-start;
+    }
+    .container {
+      max-width: 100%;
+      margin: 24px auto;
+      padding: 16px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.5); /* biraz daha okunaklı */
+    }
+    .field { margin-bottom: 14px; }
+    .field label { font-size: 0.95rem; }
+    .field input, .field textarea {
+      width: 100%;
+      padding: 12px;
+    }
+    /* iOS'ta otomatik zoom’u önlemek için font en az 16px */
+    .field input, .field textarea, button, .back-button { font-size: 16px; }
+    button, .back-button {
+      width: 100%;
+      padding: 12px 16px;
+    }
+    .status { font-size: 0.95rem; }
+  }
+
+  @media (max-width: 400px) {
+    .container {
+      margin: 12px;
+      padding: 14px;
+    }
+    .field label { font-size: 0.9rem; }
+    .field input, .field textarea {
+      padding: 12px;
+    }
+    .status { font-size: 0.9rem; }
+  }
+
+  /* Hareketi azaltmak isteyen kullanıcılar için */
+  @media (prefers-reduced-motion: reduce) {
+    button, .back-button {
+      transition: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <form id="contactForm" novalidate>
+    <div class="field">
+      <label for="name">Ad Soyad *</label>
+      <input id="name" name="name" maxlength="80" required placeholder="Adınızı ve soyadınızı girin">
+      <div class="error-text" id="err-name"></div>
+    </div>
+
+    <div class="field">
+      <label for="email">E-posta (opsiyonel)</label>
+      <input id="email" name="email" type="email" maxlength="120" placeholder="ornek@site.com">
+      <div class="error-text" id="err-email"></div>
+    </div>
+
+    <div class="field">
+      <label for="subject">Konu *</label>
+      <input id="subject" name="subject" maxlength="120" required placeholder="Mesaj konusu">
+      <div class="error-text" id="err-subject"></div>
+    </div>
+
+    <div class="field">
+      <label for="message">Mesaj *</label>
+      <textarea id="message" name="message" rows="6" maxlength="2000" required placeholder="Mesajınızı yazın"></textarea>
+      <div class="error-text" id="err-message"></div>
+    </div>
+
+    <button id="submitBtn" type="submit">Gönder</button>
+    <div id="status" class="status"></div>
+  </form>
+
+  <a href="emredoslu.html" class="back-button">Ana Sayfaya Dön</a>
+</div>
+
+<script>
+const form = document.getElementById("contactForm");
+const statusBox = document.getElementById("status");
+const submitBtn = document.getElementById("submitBtn");
+
+const el = (id) => document.getElementById(id);
+const setErr = (inputEl, errEl, msg) => {
+  inputEl.setAttribute("aria-invalid", msg ? "true" : "false");
+  errEl.textContent = msg || "";
+};
+
+const isEmail = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s || "");
+
+function clientValidate() {
+  const name = el("name").value.trim();
+  const email = el("email").value.trim();
+  const subject = el("subject").value.trim();
+  const message = el("message").value.trim();
+
+  let ok = true;
+
+  setErr(el("name"), el("err-name"), "");
+  setErr(el("email"), el("err-email"), "");
+  setErr(el("subject"), el("err-subject"), "");
+  setErr(el("message"), el("err-message"), "");
+
+  if (!name) { setErr(el("name"), el("err-name"), "Ad Soyad zorunludur."); ok = false; }
+  if (email && !isEmail(email)) { setErr(el("email"), el("err-email"), "Geçerli bir e-posta adresi girin."); ok = false; }
+  if (!subject) { setErr(el("subject"), el("err-subject"), "Konu zorunludur."); ok = false; }
+  if (!message) { setErr(el("message"), el("err-message"), "Mesaj zorunludur."); ok = false; }
+
+  return ok;
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  statusBox.className = "status";
+  statusBox.style.display = "none";
+  statusBox.textContent = "";
+
+  if (!clientValidate()) {
+    statusBox.className = "status err";
+    statusBox.style.display = "block";
+    statusBox.textContent = "Lütfen zorunlu alanları doldurun.";
+    return;
+  }
+
+  const payload = {
+    name: el("name").value.trim(),
+    email: el("email").value.trim(),
+    subject: el("subject").value.trim(),
+    message: el("message").value.trim(),
+  };
+
+  submitBtn.disabled = true;
+
+  try {
+    const res = await fetch("http://127.0.0.1:3000/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (data.ok) {
+      form.reset();
+      statusBox.className = "status ok";
+      statusBox.style.display = "block";
+      statusBox.textContent = "Teşekkürler, mesajın alındı.";
+      setErr(el("name"), el("err-name"), "");
+      setErr(el("email"), el("err-email"), "");
+      setErr(el("subject"), el("err-subject"), "");
+      setErr(el("message"), el("err-message"), "");
+    } else if (data.error === "validation_error" && data.errors) {
+      if (data.errors.name) setErr(el("name"), el("err-name"), data.errors.name);
+      if (data.errors.email) setErr(el("email"), el("err-email"), data.errors.email);
+      if (data.errors.subject) setErr(el("subject"), el("err-subject"), data.errors.subject);
+      if (data.errors.message) setErr(el("message"), el("err-message"), data.errors.message);
+
+      statusBox.className = "status err";
+      statusBox.style.display = "block";
+      statusBox.textContent = "Lütfen hatalı alanları düzeltin.";
+    } else {
+      statusBox.className = "status err";
+      statusBox.style.display = "block";
+      statusBox.textContent = "Gönderilemedi. Lütfen daha sonra tekrar deneyin.";
+      console.log("Server error:", data);
+    }
+  } catch (err) {
+    statusBox.className = "status err";
+    statusBox.style.display = "block";
+    statusBox.textContent = "Sunucuya ulaşılamadı.";
+    console.error(err);
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>
