@@ -37,7 +37,7 @@ translation: dosya-adi-en   # (isteğe bağlı) diğer dildeki versiyonun dosya 
 
 Yazı burada, Markdown ile.
 ```
-
+  
 `main` dalına push edince site birkaç dakikada güncellenir.
 
 ## İletişim formu
