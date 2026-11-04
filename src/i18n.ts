@@ -62,7 +62,7 @@ export const t = {
         when: 'Oca 2026 – Günümüz',
         title: 'Aday Araştırmacı, Cloud Ekibi',
         org: 'TÜBİTAK ULAKBİM',
-        text: 'Cloud ekibi olarak açık kaynak yazılımlarla üniversitelere cloud hizmetleri sunuyoruz; security tarafı da işimizin bir parçası. Ekip olarak uba.ulakbim.gov.tr altındaki projelerin yürütücülüğünü yapıyoruz; ben de UBA projesi kapsamında geliştirme ve operasyon süreçlerini yönetiyorum. Teknik tarafta OpenStack (IaaS), Ceph ve RADOSGW üzerinden sunulan S3 object storage ile çalışıyor; Grafana ve Prometheus ile capacity, tenant bazlı kullanım ve backup monitoring dashboard\'ları hazırlıyorum.',
+        text: 'Cloud ekibi olarak açık kaynak yazılımlarla üniversitelere cloud hizmetleri sunuyoruz; security tarafı da işimizin bir parçası. Ekip olarak uba.ulakbim.gov.tr altındaki projelerin yürütücülüğünü yapıyoruz; ben de UBA projesi kapsamında geliştirme ve operasyon süreçlerini yönetiyorum. Günlük işim OpenStack (IaaS), Ceph ve RADOSGW üzerinden sunulan S3 object storage servislerinin takibi, monitoring\'i (Grafana, Prometheus) ve kullanıcılara teknik destek.',
         link: { label: 'uba.ulakbim.gov.tr', href: 'https://uba.ulakbim.gov.tr' },
       },
       {
@@ -173,7 +173,7 @@ export const t = {
         when: 'Jan 2026 – Present',
         title: 'Candidate Researcher, Cloud Team',
         org: 'TÜBİTAK ULAKBİM',
-        text: 'Our Cloud team provides cloud services to universities using open-source software, with security as part of the job. The team runs the projects under uba.ulakbim.gov.tr, and I manage development and operations for the UBA project. Day to day I work with OpenStack (IaaS), Ceph and S3 object storage via RADOSGW, and build Grafana/Prometheus dashboards for capacity, per-tenant usage and backup monitoring.',
+        text: 'Our Cloud team provides cloud services to universities using open-source software, with security as part of the job. The team runs the projects under uba.ulakbim.gov.tr, and I manage development and operations for the UBA project. Day to day I monitor and look after OpenStack (IaaS), Ceph and S3 object storage via RADOSGW (Grafana, Prometheus) and provide technical support to users.',
         link: { label: 'uba.ulakbim.gov.tr', href: 'https://uba.ulakbim.gov.tr' },
       },
       {
