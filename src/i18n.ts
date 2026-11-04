@@ -95,7 +95,7 @@ export const t = {
         name: 'Ceph failure domain deneyleri',
         tag: 'Ceph · OpenStack',
         text: '18 VM\'lik bir Ceph lab\'ında host → rack failure domain geçişinde data movement\'ı, client IO\'ya etkisini ve mClock ile backfill/recovery hızının nasıl sınırlanabildiğini ölçtüm.',
-        link: { label: 'Blog yazısı yakında', href: '' },
+        link: { label: 'Blog yazısını oku', href: '/blog/ceph-failure-domain-gecisi/' },
       },
       {
         name: 'OpenStack altyapı otomasyonu',
@@ -206,7 +206,7 @@ export const t = {
         name: 'Ceph failure-domain experiments',
         tag: 'Ceph · OpenStack',
         text: 'In an 18-VM Ceph lab, I measured data movement, client IO impact and how mClock can throttle backfill/recovery when switching the failure domain from host to rack.',
-        link: { label: 'Blog post coming soon', href: '' },
+        link: { label: 'Read the post (Turkish)', href: '/blog/ceph-failure-domain-gecisi/' },
       },
       {
         name: 'OpenStack infrastructure automation',
