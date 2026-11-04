@@ -44,7 +44,7 @@ export const t = {
     hero: {
       greeting: 'Merhaba, ben',
       role: 'Software & Cloud Infrastructure',
-      bio: 'ODTÜ Bilgisayar Mühendisliği öğrencisiyim. TÜBİTAK ULAKBİM\'de Cloud ekibinde aday araştırmacı olarak çalışıyorum; açık kaynak yazılımlarla cloud hizmetleri sunuyor, OpenStack, Ceph ve S3 object storage tarafında çalışıyorum. Burada denediklerimi, öğrendiklerimi ve projelerimi paylaşıyorum.',
+      bio: 'ODTÜ Bilgisayar Mühendisliği öğrencisiyim. TÜBİTAK ULAKBİM\'de Cloud ekibinde aday araştırmacı olarak UBA projesi kapsamında çalışıyorum. OpenStack, Ceph ve S3 object storage gibi açık kaynak teknolojilerle cloud hizmeti veriyoruz; bu süreçte sistem yöneticiliği tarafında tecrübe kazanırken yazılım geliştirme süreçlerinde de yer alıyorum. Burada denediklerimi, öğrendiklerimi ve projelerimi paylaşıyorum.',
       ctaBlog: 'Yazıları oku',
       ctaCv: 'Özgeçmiş',
     },
@@ -155,7 +155,7 @@ export const t = {
     hero: {
       greeting: "Hi, I'm",
       role: 'Software & Cloud Infrastructure',
-      bio: "I'm a Computer Engineering student at METU (Middle East Technical University) and a candidate researcher on the Cloud team at TÜBİTAK ULAKBİM, where we run cloud services built on open-source software. I work mostly with OpenStack, Ceph and S3 object storage. Here I share my experiments, what I learn and my projects.",
+      bio: "I'm a Computer Engineering student at METU (Middle East Technical University) and a candidate researcher on the Cloud team at TÜBİTAK ULAKBİM, working on the UBA project. We provide cloud services with open-source technologies like OpenStack, Ceph and S3 object storage; along the way I'm gaining system administration experience and taking part in software development work too. Here I share my experiments, what I learn and my projects.",
       ctaBlog: 'Read the blog',
       ctaCv: 'View CV',
     },
