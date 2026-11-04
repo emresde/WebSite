@@ -46,4 +46,4 @@ Form, `backend/` içindeki Node.js servisine (Render) istek atar. Backend deği�
 
 ## Eski adresler
 
-`ozgecmis.html`, `iletisim.html`, `sosyal.html`, `emredoslu.html` yeni sayfalara yönlendirir.
+`ozgecmis.html`, `iletisim.html`, `sosyal.html`, `emredoslu.html` yeni sayfalara yönlendirir
