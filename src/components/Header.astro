@@ -1,0 +1,79 @@
+---
+import Icon from './Icon.astro';
+import { t, routes, url, type Lang, type RouteKey } from '../i18n';
+interface Props { lang: Lang; current?: RouteKey; altHref?: string }
+const { lang, current, altHref } = Astro.props;
+const s = t[lang];
+const other: Lang = lang === 'tr' ? 'en' : 'tr';
+const switchHref = altHref ?? url(routes[current ?? 'home'][other]);
+const items: { key: RouteKey | 'projects'; label: string; href: string }[] = [
+  { key: 'blog', label: s.nav.blog, href: url(routes.blog[lang]) },
+  { key: 'projects', label: s.nav.projects, href: url(routes.home[lang]) + '#projeler' },
+  { key: 'cv', label: s.nav.cv, href: url(routes.cv[lang]) },
+  { key: 'contact', label: s.nav.contact, href: url(routes.contact[lang]) },
+];
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href={url(routes.home[lang])}>emre döşlü</a>
+    <nav aria-label={lang === 'tr' ? 'Ana menü' : 'Main menu'}>
+      <ul>
+        {items.map((i) => (
+          <li><a href={i.href} aria-current={current === i.key ? 'page' : undefined}>{i.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <div class="tools">
+      <a class="lang" href={switchHref} hreflang={other} lang={other}>{other.toUpperCase()}<span class="sr-only"> — {s.langSwitch}</span></a>
+      <button class="theme" type="button" aria-label={s.themeToggle} data-theme-toggle>
+        <span class="i-sun"><Icon name="sun" size={18} /></span>
+        <span class="i-moon"><Icon name="moon" size={18} /></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: saturate(160%) blur(10px);
+    -webkit-backdrop-filter: saturate(160%) blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar { display: flex; align-items: center; gap: 20px; height: 60px; }
+  .brand { font-weight: 750; letter-spacing: -0.01em; color: var(--text); white-space: nowrap; }
+  .brand:hover { text-decoration: none; color: var(--accent); }
+  nav { margin-left: auto; }
+  nav ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  nav a {
+    display: block; padding: 6px 10px; border-radius: 8px; color: var(--muted);
+    font-size: 0.95rem; font-weight: 550;
+  }
+  nav a:hover { color: var(--text); background: var(--surface-2); text-decoration: none; }
+  nav a[aria-current='page'] { color: var(--text); }
+  .tools { display: flex; align-items: center; gap: 6px; }
+  .lang, .theme {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 34px; min-width: 34px; padding: 0 8px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+    font: 600 0.78rem var(--font); letter-spacing: 0.04em; cursor: pointer;
+  }
+  .lang:hover, .theme:hover { color: var(--text); text-decoration: none; border-color: var(--faint); }
+  .i-moon { display: none; }
+  :global(:root[data-theme='dark']) .i-sun { display: none; }
+  :global(:root[data-theme='dark']) .i-moon { display: inline-flex; }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .i-sun { display: none; }
+    :global(:root:not([data-theme='light'])) .i-moon { display: inline-flex; }
+  }
+  .i-sun, .i-moon { align-items: center; }
+  .i-sun { display: inline-flex; }
+
+  @media (max-width: 640px) {
+    .bar { height: auto; flex-wrap: wrap; padding-top: 10px; padding-bottom: 6px; gap: 6px 12px; }
+    nav { order: 3; width: 100%; margin-left: -10px; }
+    nav ul { gap: 0; overflow-x: auto; }
+    .tools { margin-left: auto; }
+  }
+</style>

@@ -1,0 +1,37 @@
+---
+import Base from '../../layouts/Base.astro';
+import { render } from 'astro:content';
+import { getCollection } from 'astro:content';
+import { t, url, routes, formatDate, readingMinutes } from '../../i18n';
+import { postPath, type Post } from '../../lib/posts';
+interface Props { post: Post }
+const { post } = Astro.props;
+const lang = post.data.lang;
+const s = t[lang];
+const { Content } = await render(post);
+let altHref: string | undefined;
+if (post.data.translation) {
+  const all = await getCollection('blog');
+  const tr = all.find((p) => p.id === post.data.translation);
+  if (tr) altHref = url(postPath(tr));
+}
+---
+<Base lang={lang} current="blog" title={post.data.title} description={post.data.description} altHref={altHref}>
+  <article class="wrap">
+    <a class="back" href={url(routes.blog[lang])}>{s.blog.back}</a>
+    <header class="post-head">
+      <h1>{post.data.title}</h1>
+      <p class="meta">
+        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
+        · {readingMinutes(post.body)} {s.blog.minRead}
+        {post.data.tags.length > 0 && <> · {post.data.tags.map((tg) => <span class="tag">{tg}</span>)}</>}
+      </p>
+    </header>
+    <div class="prose"><Content /></div>
+  </article>
+</Base>
+<style>
+  .back { font-size: 0.9rem; font-weight: 600; }
+  .post-head { margin: 22px 0 32px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+  .meta { color: var(--faint); font-size: 0.9rem; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+</style>

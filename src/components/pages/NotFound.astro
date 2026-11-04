@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import { t, url, routes, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t[lang].notFound;
+---
+<Base lang={lang} title={s.title}>
+  <div class="wrap nf">
+    <p class="code">404</p>
+    <h1>{s.title}</h1>
+    <p class="muted">{s.text}</p>
+    <a class="btn btn-primary" href={url(routes.home[lang])}>{s.home}</a>
+  </div>
+</Base>
+<style>
+  .nf { text-align: center; padding-top: 40px; }
+  .code { font: 700 4rem var(--mono); color: var(--faint); margin: 0; }
+</style>

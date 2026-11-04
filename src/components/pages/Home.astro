@@ -1,0 +1,122 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import PostList from '../PostList.astro';
+import { t, profile, routes, url, type Lang } from '../../i18n';
+import { getPosts } from '../../lib/posts';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t[lang];
+const posts = (await getPosts(lang)).slice(0, 3);
+---
+<Base lang={lang} current="home">
+  <div class="wrap">
+    <section class="hero">
+      <p class="hello">{s.hero.greeting}</p>
+      <h1>{profile.name}</h1>
+      <p class="role">{s.hero.role}</p>
+      <p class="bio">{s.hero.bio}</p>
+      <div class="cta">
+        <a class="btn btn-primary" href={url(routes.blog[lang])}>{s.hero.ctaBlog} <Icon name="arrow" size={16} /></a>
+        <a class="btn" href={url(routes.cv[lang])}>{s.hero.ctaCv}</a>
+      </div>
+      <ul class="social">
+        {profile.social.map((x) => (
+          <li><a href={x.href} rel="me noopener" target="_blank" aria-label={x.label} title={x.label}><Icon name={x.key} size={20} /></a></li>
+        ))}
+      </ul>
+    </section>
+
+    <section aria-labelledby="exp">
+      <h2 id="exp" class="section-title">{s.sections.experience}</h2>
+      <ol class="timeline">
+        {s.experience.map((e) => (
+          <li>
+            <span class="when">{e.when}</span>
+            <div>
+              <h3>{e.title}</h3>
+              <p class="org">{e.org}</p>
+              <p class="text">{e.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section id="projeler" aria-labelledby="proj">
+      <h2 id="proj" class="section-title">{s.sections.projects}</h2>
+      <div class="grid">
+        {s.projects.map((p) => (
+          <article class="card project">
+            <div class="head"><h3>{p.name}</h3><span class="tag">{p.tag}</span></div>
+            <p>{p.text}</p>
+            {p.link && (p.link.href
+              ? <a class="more" href={url(p.link.href)}>{p.link.label} →</a>
+              : <span class="more soon">{p.link.label}</span>)}
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section aria-labelledby="posts">
+      <div class="title-row">
+        <h2 id="posts" class="section-title">{s.sections.latest}</h2>
+        <a class="all" href={url(routes.blog[lang])}>{s.sections.allPosts} →</a>
+      </div>
+      <PostList lang={lang} posts={posts} />
+    </section>
+
+    <section class="two" aria-label={`${s.sections.skills}, ${s.sections.awards}`}>
+      <div>
+        <h2 class="section-title">{s.sections.skills}</h2>
+        <ul class="chips">{s.skills.map((k) => <li>{k}</li>)}</ul>
+      </div>
+      <div>
+        <h2 class="section-title">{s.sections.awards}</h2>
+        <ul class="awards">
+          {s.awards.map((a) => <li><span class="when">{a.when}</span> {a.text}</li>)}
+        </ul>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .hero { padding: 24px 0 8px; }
+  .hello { margin: 0 0 4px; color: var(--muted); font-weight: 550; }
+  .hero h1 { margin-bottom: 6px; }
+  .role { font-size: 1.15rem; color: var(--accent); font-weight: 600; margin-bottom: 18px; }
+  .bio { font-size: 1.08rem; color: var(--muted); max-width: 62ch; }
+  .cta { display: flex; gap: 10px; flex-wrap: wrap; margin: 26px 0 22px; }
+  .social { display: flex; gap: 2px; list-style: none; padding: 0; margin: 0 0 0 -8px; }
+  .social a { display: inline-flex; padding: 8px; border-radius: 8px; color: var(--muted); }
+  .social a:hover { color: var(--text); background: var(--surface-2); }
+
+  .timeline { list-style: none; padding: 0; margin: 0; display: grid; gap: 22px; }
+  .timeline li { display: grid; grid-template-columns: 150px 1fr; gap: 18px; }
+  .timeline .when { color: var(--faint); font-size: 0.9rem; padding-top: 2px; font-variant-numeric: tabular-nums; }
+  .timeline h3 { margin: 0; }
+  .org { margin: 2px 0 6px; color: var(--accent); font-weight: 550; font-size: 0.95rem; }
+  .timeline .text { margin: 0; color: var(--muted); font-size: 0.97rem; }
+
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .project { display: flex; flex-direction: column; }
+  .project .head { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
+  .project h3 { margin: 0; }
+  .project p { color: var(--muted); font-size: 0.95rem; flex: 1; }
+  .more { font-size: 0.9rem; font-weight: 600; }
+  .soon { color: var(--faint); }
+
+  .title-row { display: flex; align-items: baseline; justify-content: space-between; }
+  .all { font-size: 0.9rem; font-weight: 600; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+  .awards { list-style: none; padding: 0; margin: 0; color: var(--muted); font-size: 0.97rem; }
+  .awards .when { display: block; color: var(--faint); font-size: 0.85rem; }
+
+  @media (max-width: 600px) {
+    .timeline li { grid-template-columns: 1fr; gap: 2px; }
+    .two { grid-template-columns: 1fr; gap: 44px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>

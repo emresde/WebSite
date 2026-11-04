@@ -1,0 +1,127 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import { t, profile, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t[lang];
+const c = s.contact;
+const api = profile.contactApi;
+const msg = {
+  errName: c.errName, errEmail: c.errEmail, errSubject: c.errSubject, errMessage: c.errMessage,
+  fillRequired: c.fillRequired, fixFields: c.fixFields, ok: c.ok, fail: c.fail,
+  unreachable: c.unreachable, send: c.send, sending: c.sending,
+};
+---
+<Base lang={lang} current="contact" title={c.title} description={c.intro}>
+  <div class="wrap">
+    <h1>{c.title}</h1>
+    <p class="muted">{c.intro}</p>
+    <p class="mail"><Icon name="mail" size={18} /> <a href={`mailto:${profile.email}`}>{profile.email}</a></p>
+
+    <form id="contactForm" class="card" novalidate>
+      <div class="field">
+        <label for="name">{c.name}</label>
+        <input id="name" name="name" maxlength="80" required autocomplete="name" aria-describedby="err-name" />
+        <p class="err" id="err-name" aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for="email">{c.email}</label>
+        <input id="email" name="email" type="email" maxlength="120" autocomplete="email" aria-describedby="err-email" />
+        <p class="err" id="err-email" aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for="subject">{c.subject}</label>
+        <input id="subject" name="subject" maxlength="120" required aria-describedby="err-subject" />
+        <p class="err" id="err-subject" aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for="message">{c.message}</label>
+        <textarea id="message" name="message" rows="6" maxlength="2000" required aria-describedby="err-message"></textarea>
+        <p class="err" id="err-message" aria-live="polite"></p>
+      </div>
+      <div class="actions">
+        <button id="submitBtn" class="btn btn-primary" type="submit">{c.send}</button>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+  </div>
+</Base>
+
+<script is:inline define:vars={{ api, msg }}>
+  // Yerelde 127.0.0.1, yayinda Render'daki backend (backend/server.js)
+  const API_BASE = (location.hostname === '127.0.0.1' || location.hostname === 'localhost') ? api.local : api.prod;
+  const form = document.getElementById('contactForm');
+  const statusBox = document.getElementById('status');
+  const submitBtn = document.getElementById('submitBtn');
+  const el = (id) => document.getElementById(id);
+  const fields = ['name', 'email', 'subject', 'message'];
+  const setErr = (f, text) => {
+    el(f).setAttribute('aria-invalid', text ? 'true' : 'false');
+    el('err-' + f).textContent = text || '';
+  };
+  const setStatus = (kind, text) => { statusBox.className = 'status ' + (kind || ''); statusBox.textContent = text || ''; };
+  const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v || '');
+
+  function validate() {
+    fields.forEach((f) => setErr(f, ''));
+    let ok = true;
+    if (!el('name').value.trim()) { setErr('name', msg.errName); ok = false; }
+    const em = el('email').value.trim();
+    if (em && !isEmail(em)) { setErr('email', msg.errEmail); ok = false; }
+    if (!el('subject').value.trim()) { setErr('subject', msg.errSubject); ok = false; }
+    if (!el('message').value.trim()) { setErr('message', msg.errMessage); ok = false; }
+    return ok;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    setStatus('', '');
+    if (!validate()) { setStatus('err', msg.fillRequired); return; }
+    const payload = Object.fromEntries(fields.map((f) => [f, el(f).value.trim()]));
+    submitBtn.disabled = true; submitBtn.textContent = msg.sending;
+    try {
+      const res = await fetch(API_BASE + '/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify(payload),
+      });
+      const isJson = (res.headers.get('content-type') || '').includes('application/json');
+      const data = isJson ? await res.json() : { ok: false, error: 'server_error' };
+      if (data.ok) {
+        form.reset(); fields.forEach((f) => setErr(f, ''));
+        setStatus('ok', msg.ok);
+      } else if (data.error === 'validation_error') {
+        Object.entries(data.errors || {}).forEach(([f, text]) => setErr(f, text));
+        setStatus('err', msg.fixFields);
+      } else {
+        setStatus('err', msg.fail);
+      }
+    } catch (err) {
+      setStatus('err', msg.unreachable);
+    } finally {
+      submitBtn.disabled = false; submitBtn.textContent = msg.send;
+    }
+  });
+</script>
+
+<style>
+  .mail { display: flex; align-items: center; gap: 8px; color: var(--muted); margin-bottom: 28px; }
+  form { display: grid; gap: 4px; padding: 26px; }
+  .field { display: grid; gap: 6px; }
+  label { font-weight: 600; font-size: 0.92rem; }
+  input, textarea {
+    width: 100%; font: inherit; font-size: 1rem; color: var(--text);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+  textarea { resize: vertical; min-height: 140px; }
+  input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  [aria-invalid='true'] { border-color: var(--err); }
+  .err { min-height: 1.3em; margin: 0 0 6px; color: var(--err); font-size: 0.85rem; }
+  .actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 4px; }
+  .status { margin: 0; font-size: 0.95rem; }
+  .status.ok { color: var(--ok); }
+  .status.err { color: var(--err); }
+  @media (max-width: 600px) { form { padding: 18px; } }
+</style>
