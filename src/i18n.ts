@@ -43,8 +43,8 @@ export const t = {
     skip: 'İçeriğe geç',
     hero: {
       greeting: 'Merhaba, ben',
-      role: 'Yazılım ve bulut altyapısı',
-      bio: 'ODTÜ Bilgisayar Mühendisliği öğrencisiyim. TÜBİTAK ULAKBİM\'de Üniversite Bilişim Altyapıları (UBA) bulut ekibinde aday araştırmacı olarak OpenStack, Ceph ve S3 uyumlu nesne depolama servisleri üzerinde çalışıyorum. Burada denediklerimi, öğrendiklerimi ve projelerimi paylaşıyorum.',
+      role: 'Software & Cloud Infrastructure',
+      bio: 'ODTÜ Bilgisayar Mühendisliği öğrencisiyim. TÜBİTAK ULAKBİM\'de Cloud ekibinde aday araştırmacı olarak çalışıyorum; açık kaynak yazılımlarla cloud hizmetleri sunuyor, OpenStack, Ceph ve S3 object storage tarafında çalışıyorum. Burada denediklerimi, öğrendiklerimi ve projelerimi paylaşıyorum.',
       ctaBlog: 'Yazıları oku',
       ctaCv: 'Özgeçmiş',
     },
@@ -60,27 +60,28 @@ export const t = {
     experience: [
       {
         when: 'Oca 2026 – Günümüz',
-        title: 'Aday Araştırmacı, UBA Bulut Ekibi',
+        title: 'Aday Araştırmacı, Cloud Ekibi',
         org: 'TÜBİTAK ULAKBİM',
-        text: 'Açık kaynak bulut servislerinin kurulum, yapılandırma ve operasyonunda görev alıyorum. OpenStack tabanlı IaaS ve Ceph üzerinde RADOSGW ile sunulan S3 uyumlu nesne depolama servisleriyle çalışıyor; Grafana ve Prometheus ile kapasite, tenant bazlı kullanım ve yedekleme izleme dashboard\'ları geliştiriyorum.',
+        text: 'Cloud ekibi olarak açık kaynak yazılımlarla üniversitelere cloud hizmetleri sunuyoruz; security tarafı da işimizin bir parçası. Ekip olarak uba.ulakbim.gov.tr altındaki projelerin yürütücülüğünü yapıyoruz; ben de UBA projesi kapsamında geliştirme ve operasyon süreçlerini yönetiyorum. Teknik tarafta OpenStack (IaaS), Ceph ve RADOSGW üzerinden sunulan S3 object storage ile çalışıyor; Grafana ve Prometheus ile capacity, tenant bazlı kullanım ve backup monitoring dashboard\'ları hazırlıyorum.',
+        link: { label: 'uba.ulakbim.gov.tr', href: 'https://uba.ulakbim.gov.tr' },
       },
       {
         when: 'Eyl 2025',
         title: 'Yazılım Geliştirme Stajyeri',
         org: 'TÜBİTAK ULAKBİM',
-        text: 'Java ve Spring Boot ile akademik yayın verilerini sorgulayan, işleyen ve filtreleyen RESTful API geliştirme çalışmalarında yer aldım.',
+        text: 'Java ve Spring Boot ile akademik yayın verilerini sorgulayan, işleyen ve filtreleyen bir REST API geliştirdim.',
       },
       {
         when: 'Tem – Ağu 2025',
         title: 'Yazılım Geliştirme ve Test Stajyeri',
         org: 'Bites Savunma',
-        text: 'Altay tankı veri yönetim sistemi için C++ ve Qt Test ile otomatik birim testleri geliştirdim; test senaryoları hazırlayıp doğrulama ve hata ayıklama süreçlerine katkı sağladım.',
+        text: 'Altay tankı data management sistemi için C++ ve Qt Test ile otomatik unit test\'ler yazdım; test senaryoları hazırlayıp verification ve debugging süreçlerine katkı sağladım.',
       },
       {
         when: '2021 – Günümüz',
         title: 'Bilgisayar Mühendisliği (Lisans)',
         org: 'Orta Doğu Teknik Üniversitesi',
-        text: 'Sistem programlama, işletim sistemleri, bilgisayar ağları ve derin öğrenme ağırlıklı.',
+        text: 'Systems programming, operating systems, computer networks ve deep learning ağırlıklı.',
       },
     ],
     projects: [
@@ -93,13 +94,13 @@ export const t = {
       {
         name: 'Ceph failure domain deneyleri',
         tag: 'Ceph · OpenStack',
-        text: '18 VM\'lik bir Ceph lab\'ında host → rack geçişinin veri hareketini, istemci etkisini ve mClock ile taşıma hızının kontrolünü ölçtüm.',
+        text: '18 VM\'lik bir Ceph lab\'ında host → rack failure domain geçişinde data movement\'ı, client IO\'ya etkisini ve mClock ile backfill/recovery hızının nasıl sınırlanabildiğini ölçtüm.',
         link: { label: 'Blog yazısı yakında', href: '' },
       },
       {
         name: 'OpenStack altyapı otomasyonu',
         tag: 'OpenStack · OpenTofu',
-        text: 'OpenStack üzerinde VM, ağ, router, security group ve floating IP yapılandırmalarını OpenTofu ile kod olarak (IaC) yönettim.',
+        text: 'OpenStack üzerinde VM, network, router, security group ve floating IP yapılandırmalarını OpenTofu ile IaC olarak yönettim.',
         link: null,
       },
     ],
@@ -109,7 +110,7 @@ export const t = {
     skills: ['Linux', 'OpenStack', 'Ceph / RADOSGW', 'S3', 'Docker', 'OpenTofu', 'Grafana', 'Prometheus', 'OpenSearch', 'Python', 'Java / Spring Boot', 'C / C++', 'Swift / SwiftUI', 'SQL', 'Git'],
     blog: {
       title: 'Blog',
-      intro: 'Bulut altyapısı, depolama ve yazılım üzerine notlar ve deneyler.',
+      intro: 'Cloud altyapısı, storage ve yazılım üzerine notlar ve deneyler.',
       empty: 'Henüz yayınlanmış yazı yok. Yakında!',
       readMore: 'Devamını oku',
       back: '← Tüm yazılar',
@@ -153,8 +154,8 @@ export const t = {
     skip: 'Skip to content',
     hero: {
       greeting: "Hi, I'm",
-      role: 'Software & cloud infrastructure',
-      bio: "I'm a Computer Engineering student at METU (Middle East Technical University). As a candidate researcher on the University IT Infrastructures (UBA) cloud team at TÜBİTAK ULAKBİM, I work with OpenStack, Ceph and S3-compatible object storage services. Here I share my experiments, what I learn and my projects.",
+      role: 'Software & Cloud Infrastructure',
+      bio: "I'm a Computer Engineering student at METU (Middle East Technical University) and a candidate researcher on the Cloud team at TÜBİTAK ULAKBİM, where we run cloud services built on open-source software. I work mostly with OpenStack, Ceph and S3 object storage. Here I share my experiments, what I learn and my projects.",
       ctaBlog: 'Read the blog',
       ctaCv: 'View CV',
     },
@@ -170,9 +171,10 @@ export const t = {
     experience: [
       {
         when: 'Jan 2026 – Present',
-        title: 'Candidate Researcher, UBA Cloud Team',
+        title: 'Candidate Researcher, Cloud Team',
         org: 'TÜBİTAK ULAKBİM',
-        text: 'Contributing to the deployment, configuration and operation of open-source cloud services. Working with OpenStack-based IaaS and Ceph with S3-compatible object storage via RADOSGW; building Grafana/Prometheus dashboards for capacity, tenant-level usage and backup activity.',
+        text: 'Our Cloud team provides cloud services to universities using open-source software, with security as part of the job. The team runs the projects under uba.ulakbim.gov.tr, and I manage development and operations for the UBA project. Day to day I work with OpenStack (IaaS), Ceph and S3 object storage via RADOSGW, and build Grafana/Prometheus dashboards for capacity, per-tenant usage and backup monitoring.',
+        link: { label: 'uba.ulakbim.gov.tr', href: 'https://uba.ulakbim.gov.tr' },
       },
       {
         when: 'Sep 2025',
@@ -203,7 +205,7 @@ export const t = {
       {
         name: 'Ceph failure-domain experiments',
         tag: 'Ceph · OpenStack',
-        text: 'In an 18-VM Ceph lab, I measured data movement, client impact and how mClock can throttle rebalancing when switching from host- to rack-level failure domains.',
+        text: 'In an 18-VM Ceph lab, I measured data movement, client IO impact and how mClock can throttle backfill/recovery when switching the failure domain from host to rack.',
         link: { label: 'Blog post coming soon', href: '' },
       },
       {

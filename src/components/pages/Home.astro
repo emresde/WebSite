@@ -37,6 +37,9 @@ const posts = (await getPosts(lang)).slice(0, 3);
               <h3>{e.title}</h3>
               <p class="org">{e.org}</p>
               <p class="text">{e.text}</p>
+              {'link' in e && e.link && (
+                <p class="exp-link"><a href={e.link.href} target="_blank" rel="noopener">{e.link.label} ↗</a></p>
+              )}
             </div>
           </li>
         ))}
@@ -98,6 +101,7 @@ const posts = (await getPosts(lang)).slice(0, 3);
   .timeline h3 { margin: 0; }
   .org { margin: 2px 0 6px; color: var(--accent); font-weight: 550; font-size: 0.95rem; }
   .timeline .text { margin: 0; color: var(--muted); font-size: 0.97rem; }
+  .exp-link { margin: 6px 0 0; font-size: 0.9rem; font-weight: 550; }
 
   .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
   .project { display: flex; flex-direction: column; }

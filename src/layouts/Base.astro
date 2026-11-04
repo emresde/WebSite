@@ -32,7 +32,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta name="theme-color" content="#fbfbfa" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#0b1022" media="(prefers-color-scheme: dark)" />
     <script is:inline>
       // Secilen temayi sayfa cizilmeden once uygula (yanip sonmeyi onler).
       try {
@@ -42,6 +42,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </script>
   </head>
   <body>
+    <div class="glow" aria-hidden="true"><span class="g1"></span><span class="g2"></span><span class="g3"></span><span class="g4"></span></div>
     <a class="skip-link" href="#icerik">{s.skip}</a>
     <Header lang={lang} current={current} altHref={altHref} />
     <main id="icerik">
