@@ -118,10 +118,9 @@ export const t = {
     },
     cv: {
       title: 'Özgeçmiş',
-      intro: 'Güncel özgeçmişimi buradan görüntüleyebilir ya da indirebilirsin.',
-      viewTr: 'Türkçe',
-      viewEn: 'English',
+      intro: 'Güncel özgeçmişim. PDF olarak da indirebilirsin.',
       download: 'PDF indir',
+      otherPdf: 'English PDF',
     },
     contact: {
       title: 'İletişim',
@@ -229,10 +228,9 @@ export const t = {
     },
     cv: {
       title: 'CV',
-      intro: 'View or download my latest CV.',
-      viewTr: 'Türkçe',
-      viewEn: 'English',
+      intro: 'My latest CV. You can also download it as a PDF.',
       download: 'Download PDF',
+      otherPdf: 'Türkçe PDF',
     },
     contact: {
       title: 'Contact',

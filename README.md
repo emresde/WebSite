@@ -16,6 +16,7 @@ npm run build      # dist/ klasörüne üretir
 |---|---|
 | Tanıtım, deneyim, projeler, beceriler, sosyal linkler (TR + EN) | `src/i18n.ts` |
 | Renkler, yazı tipleri | `src/styles/global.css` |
+| Özgeçmiş sayfası metni (TR + EN) | `src/cv.ts` |
 | Özgeçmiş PDF'leri | `public/cv.pdf`, `public/cv_en.pdf` |
 | CebimCepte gizlilik politikası (adresi değişmemeli) | `public/cebimcepte-privacy.html` |
 
