@@ -31,18 +31,25 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={desc} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta name="theme-color" content="#fbfbfa" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0b1022" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#08080b" media="(prefers-color-scheme: dark)" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" />
     <script is:inline>
       // Secilen temayi sayfa cizilmeden once uygula (yanip sonmeyi onler).
       try {
         var th = localStorage.getItem('theme');
-        if (th === 'light' || th === 'dark') document.documentElement.dataset.theme = th;
+        if (th === 'light' || th === 'dark') {
+          document.documentElement.dataset.theme = th;
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+            m.setAttribute('content', th === 'dark' ? '#08080b' : '#ffffff');
+          });
+        }
       } catch (e) {}
     </script>
   </head>
   <body>
-    <div class="glow" aria-hidden="true"><span class="g1"></span><span class="g2"></span><span class="g3"></span><span class="g4"></span></div>
     <a class="skip-link" href="#icerik">{s.skip}</a>
     <Header lang={lang} current={current} altHref={altHref} />
     <main id="icerik">
@@ -59,6 +66,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
             (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
           var next = current === 'dark' ? 'light' : 'dark';
           root.dataset.theme = next;
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+            m.setAttribute('content', next === 'dark' ? '#08080b' : '#ffffff');
+          });
           try { localStorage.setItem('theme', next); } catch (e) {}
         });
       })();

@@ -16,5 +16,7 @@ const { name, size = 20, label } = Astro.props;
   {name === 'sun' && <><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></>}
   {name === 'moon' && <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />}
   {name === 'arrow' && <path d="M5 12h14M13 6l6 6-6 6" />}
+  {name === 'menu' && <path d="M4 7h16M4 12h16M4 17h16" />}
+  {name === 'close' && <path d="M6 6l12 12M18 6L6 18" />}
   {name === 'download' && <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="M7 10l5 5 5-5M12 15V3" /></>}
 </svg>
