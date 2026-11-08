@@ -30,30 +30,7 @@
   color-scheme: light;
 }
 
-/* Koyu tema degerleri iki yerde tekrarlanir: sistem tercihi ve dugmeyle secim. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #08080b;
-    --bg-2: #0d0d13;
-    --surface: #101017;
-    --surface-2: #17171f;
-    --text: #f3f3f7;
-    --muted: #a5a7ba;
-    --faint: #727487;
-    --border: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.16);
-    --accent: #5b87ff;
-    --accent-hover: #82a4ff;
-    --accent-2: #a685ff;
-    --accent-soft: rgba(91, 135, 255, 0.14);
-    --grad: linear-gradient(115deg, #5b87ff 0%, #a685ff 100%);
-    --btn-grad: linear-gradient(115deg, #2f5ff0 0%, #7a4ee8 100%);
-    --ok: #3fb950;
-    --err: #ff7b72;
-    --shadow: none;
-    color-scheme: dark;
-  }
-}
+/* Varsayilan tema acik; koyu tema sadece dugmeyle secilince (data-theme="dark"). */
 :root[data-theme="dark"] {
   --bg: #08080b;
   --bg-2: #0d0d13;
@@ -172,10 +149,6 @@ section + section { margin-top: 56px; }
 /* Shiki (kod renklendirme): koyu temada koyu renkler */
 :root[data-theme="dark"] .astro-code,
 :root[data-theme="dark"] .astro-code span { color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .astro-code,
-  :root:not([data-theme="light"]) .astro-code span { color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important; }
-}
 
 @media (max-width: 600px) {
   body { font-size: 16px; }

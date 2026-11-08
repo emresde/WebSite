@@ -98,10 +98,6 @@ const menuLabel = lang === 'tr' ? 'Menüyü aç/kapat' : 'Toggle menu';
   .i-moon, .i-close, .menu { display: none; }
   :global(:root[data-theme='dark']) .i-sun { display: none; }
   :global(:root[data-theme='dark']) .i-moon { display: inline-flex; }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .i-sun { display: none; }
-    :global(:root:not([data-theme='light'])) .i-moon { display: inline-flex; }
-  }
 
   /* Mobil: tek satir ust bar + acilir menu */
   @media (max-width: 680px) {
