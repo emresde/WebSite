@@ -1,0 +1,401 @@
+---
+// Ana sayfa girisi: siyah ekranda kucuk bir labirent oyunu.
+// Oyuncu bir kapiya ulasinca o bolume gidilir. Her oturumda bir kez acilir;
+// "Siteye geç" (Esc) ile her an atlanabilir, kapilar ayrica duz link olarak da var.
+import { routes, url, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = lang === 'tr';
+const L = tr
+  ? {
+      boot: 'sistem hazır · emredoslu.com',
+      hint: 'Bir kapıya ulaş. Ok tuşları / WASD · mobilde kaydır.',
+      score: 'SKOR',
+      skip: 'Siteye geç',
+      direct: 'ya da doğrudan:',
+      granted: 'ERİŞİM İZNİ VERİLDİ',
+      dialog: 'Labirent girişi',
+      replay: 'labirent',
+      pad: { up: 'Yukarı', down: 'Aşağı', left: 'Sol', right: 'Sağ' },
+    }
+  : {
+      boot: 'system ready · emredoslu.com',
+      hint: 'Reach a door. Arrow keys / WASD · swipe on mobile.',
+      score: 'SCORE',
+      skip: 'Skip to site',
+      direct: 'or go directly:',
+      granted: 'ACCESS GRANTED',
+      dialog: 'Maze intro',
+      replay: 'maze',
+      pad: { up: 'Up', down: 'Down', left: 'Left', right: 'Right' },
+    };
+const doors = {
+  top: { label: 'BLOG', href: url(routes.blog[lang]) },
+  right: { label: tr ? 'PROJELER' : 'PROJECTS', href: '#projeler' },
+  bottom: { label: tr ? 'ÖZGEÇMİŞ' : 'CV', href: url(routes.cv[lang]) },
+  left: { label: tr ? 'İLETİŞİM' : 'CONTACT', href: url(routes.contact[lang]) },
+};
+---
+<script is:inline>
+  (function () {
+    var show = true;
+    try {
+      if (sessionStorage.getItem('maze-seen') === '1') show = false;
+    } catch (e) {}
+    if (/[?&]play\b/.test(location.search)) show = true;
+    if (location.hash) show = false;
+    if (show) document.documentElement.classList.add('intro-on');
+  })();
+</script>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap" />
+
+<div class="intro" role="dialog" aria-modal="true" aria-label={L.dialog} data-intro
+  data-doors={JSON.stringify(doors)} data-granted={L.granted}>
+  <div class="scan" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="boot"><span class="prompt">&gt;</span> {L.boot}<span class="caret" aria-hidden="true">_</span></p>
+    <p class="title" data-text="EMRE DÖŞLÜ">EMRE DÖŞLÜ</p>
+    <p class="hint">{L.hint}</p>
+
+    <div class="stage">
+      <canvas aria-hidden="true"></canvas>
+      <p class="granted" aria-live="assertive"></p>
+    </div>
+
+    <div class="hud">
+      <span>{L.score} <b data-score>0000</b></span>
+      <button type="button" class="skip" data-skip>[ESC] {L.skip} →</button>
+    </div>
+
+    <div class="pad" aria-hidden="true">
+      <button type="button" data-dir="up" tabindex="-1" aria-label={L.pad.up}>▲</button>
+      <button type="button" data-dir="left" tabindex="-1" aria-label={L.pad.left}>◀</button>
+      <button type="button" data-dir="down" tabindex="-1" aria-label={L.pad.down}>▼</button>
+      <button type="button" data-dir="right" tabindex="-1" aria-label={L.pad.right}>▶</button>
+    </div>
+
+    <p class="direct">
+      {L.direct}
+      {Object.values(doors).map((d) => <a href={d.href} data-door-link>{d.label}</a>)}
+    </p>
+  </div>
+</div>
+
+<style is:global>
+  .intro { display: none; }
+  html.intro-on { overflow: hidden; }
+  html.intro-on .intro {
+    --c-wall: #5b87ff;
+    --c-acc: #a685ff;
+    --c-text: #e8e8f2;
+    --c-dim: #7b7d92;
+    display: flex; position: fixed; inset: 0; z-index: 1000;
+    align-items: center; justify-content: center;
+    background: #050507; color: var(--c-text);
+    font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    overflow: hidden;
+  }
+  .intro .scan {
+    position: absolute; inset: 0; pointer-events: none; opacity: .35;
+    background: repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);
+  }
+  .intro .inner {
+    position: relative; width: min(100%, 980px); height: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    padding: clamp(14px, 3vh, 32px) 16px; gap: clamp(6px, 1.2vh, 12px);
+  }
+  .intro .boot { margin: 0; font-size: .8rem; color: var(--c-dim); letter-spacing: .04em; }
+  .intro .prompt { color: var(--c-acc); }
+  .intro .caret { animation: intro-blink 1s steps(1) infinite; }
+  .intro .title {
+    position: relative; margin: 0;
+    font-family: "Orbitron", "JetBrains Mono", monospace; font-weight: 800;
+    font-size: clamp(1.7rem, 6vw, 3.2rem); letter-spacing: .12em; line-height: 1.1;
+    background: linear-gradient(115deg, #7aa2ff, #b495ff);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 24px rgba(122, 162, 255, .35);
+  }
+  .intro .title::before, .intro .title::after {
+    content: attr(data-text); position: absolute; inset: 0; background: inherit;
+    -webkit-background-clip: text; background-clip: text; color: transparent; opacity: .7;
+  }
+  .intro .title::before { transform: translate(2px, 0); clip-path: inset(0 0 60% 0); animation: intro-glitch 3.2s infinite steps(1); }
+  .intro .title::after { transform: translate(-2px, 0); clip-path: inset(55% 0 0 0); animation: intro-glitch 2.7s infinite reverse steps(1); }
+  .intro .hint { margin: 0; font-size: .82rem; color: var(--c-dim); text-align: center; }
+  .intro .stage { position: relative; flex: 1; width: 100%; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .intro canvas { display: block; touch-action: none; }
+  .intro .granted {
+    position: absolute; inset: 0; margin: 0; display: none; align-items: center; justify-content: center;
+    font-family: "Orbitron", monospace; font-weight: 800; letter-spacing: .1em; text-align: center;
+    font-size: clamp(1rem, 3.5vw, 1.8rem); color: #b495ff; background: rgba(5,5,7,.78);
+    text-shadow: 0 0 18px rgba(166,133,255,.8);
+  }
+  .intro .granted.on { display: flex; }
+  .intro .hud { display: flex; gap: 20px; align-items: center; justify-content: space-between; width: min(100%, 640px); font-size: .82rem; color: var(--c-dim); }
+  .intro .hud b { color: var(--c-text); font-weight: 600; letter-spacing: .08em; }
+  .intro .skip {
+    font: inherit; color: var(--c-text); background: transparent; cursor: pointer;
+    border: 1px solid rgba(166,133,255,.45); border-radius: 8px; padding: 7px 12px;
+  }
+  .intro .skip:hover, .intro .skip:focus-visible { background: rgba(166,133,255,.14); outline: none; border-color: #b495ff; }
+  .intro .direct { margin: 0; font-size: .75rem; color: var(--c-dim); display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: center; }
+  .intro .direct a { color: #9db7ff; }
+  .intro .pad { display: none; }
+  @media (hover: none) and (pointer: coarse) {
+    .intro .pad {
+      display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(2, 46px); gap: 6px;
+    }
+    .intro .pad button {
+      font-size: 1.1rem; color: var(--c-text); background: rgba(91,135,255,.12);
+      border: 1px solid rgba(91,135,255,.4); border-radius: 10px; touch-action: manipulation;
+    }
+    .intro .pad [data-dir="up"] { grid-column: 2; grid-row: 1; }
+    .intro .pad [data-dir="left"] { grid-column: 1; grid-row: 2; }
+    .intro .pad [data-dir="down"] { grid-column: 2; grid-row: 2; }
+    .intro .pad [data-dir="right"] { grid-column: 3; grid-row: 2; }
+    .intro .hint { font-size: .75rem; }
+  }
+  @keyframes intro-blink { 50% { opacity: 0; } }
+  @keyframes intro-glitch {
+    0%, 86%, 100% { transform: translate(0, 0); }
+    88% { transform: translate(3px, -1px); }
+    91% { transform: translate(-3px, 1px); }
+    94% { transform: translate(2px, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .intro .title::before, .intro .title::after, .intro .caret { animation: none; }
+  }
+</style>
+
+<script>
+  type Dir = 'up' | 'down' | 'left' | 'right';
+  type Door = { label: string; href: string };
+
+  const root = document.querySelector<HTMLElement>('[data-intro]');
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const doors = JSON.parse(root.dataset.doors || '{}') as Record<'top' | 'right' | 'bottom' | 'left', Door>;
+    const canvas = root.querySelector('canvas')!;
+    const ctx = canvas.getContext('2d')!;
+    const scoreEl = root.querySelector<HTMLElement>('[data-score]')!;
+    const grantedEl = root.querySelector<HTMLElement>('.granted')!;
+    const stage = root.querySelector<HTMLElement>('.stage')!;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let C = 15, R = 9;                       // hucre sayisi (tek sayi: ortada baslangic)
+    let vW: boolean[][] = [], hW: boolean[][] = []; // vW[y][x]: hucrenin sol duvari, hW[y][x]: ust duvari
+    let pellets: boolean[][] = [];
+    let px = 0, py = 0, tx = 0, ty = 0, t = 1;     // konum ve bir sonraki hucreye ilerleme
+    let dir: Dir | null = null, want: Dir | null = null, face: Dir = 'right';
+    let score = 0, done = false, running = false, last = 0, cell = 24, ox = 0, oy = 0;
+    const SPEED = 7.5; // hucre / sn
+
+    const D: Record<Dir, [number, number]> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+
+    function open() {
+      document.documentElement.classList.add('intro-on');
+      reset();
+      if (!running) { running = true; last = performance.now(); requestAnimationFrame(loop); }
+      root.querySelector<HTMLElement>('[data-skip]')?.focus({ preventScroll: true });
+    }
+    function close(scrollTo?: string) {
+      try { sessionStorage.setItem('maze-seen', '1'); } catch (e) {}
+      document.documentElement.classList.remove('intro-on');
+      running = false;
+      if (scrollTo) document.querySelector(scrollTo)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+      else document.getElementById('icerik')?.focus?.();
+    }
+    (window as any).__openMaze = open;
+
+    function build() {
+      const portrait = isPortrait();
+      [C, R] = portrait ? [9, 13] : [15, 9];
+      vW = Array.from({ length: R }, () => Array(C + 1).fill(true));
+      hW = Array.from({ length: R + 1 }, () => Array(C).fill(true));
+      // Derinlik oncelikli labirent
+      const seen = Array.from({ length: R }, () => Array(C).fill(false));
+      const stack: [number, number][] = [[C >> 1, R >> 1]];
+      seen[R >> 1][C >> 1] = true;
+      while (stack.length) {
+        const [x, y] = stack[stack.length - 1];
+        const nb = (Object.keys(D) as Dir[]).map((d) => [d, x + D[d][0], y + D[d][1]] as const)
+          .filter(([, nx, ny]) => nx >= 0 && ny >= 0 && nx < C && ny < R && !seen[ny][nx]);
+        if (!nb.length) { stack.pop(); continue; }
+        const [d, nx, ny] = nb[(Math.random() * nb.length) | 0];
+        carve(x, y, d);
+        seen[ny][nx] = true;
+        stack.push([nx, ny]);
+      }
+      // Pac-Man gibi donguler: ic duvarlarin bir kismini kaldir (daha kolay, daha akici)
+      for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) {
+        if (x < C - 1 && vW[y][x + 1] && Math.random() < 0.22) vW[y][x + 1] = false;
+        if (y < R - 1 && hW[y + 1][x] && Math.random() < 0.22) hW[y + 1][x] = false;
+      }
+      // Kapilar: dort kenarin ortasi
+      hW[0][C >> 1] = false; hW[R][C >> 1] = false; vW[R >> 1][0] = false; vW[R >> 1][C] = false;
+      pellets = Array.from({ length: R }, () => Array(C).fill(true));
+    }
+    function isPortrait() { return window.innerHeight > window.innerWidth * 1.1; }
+    function carve(x: number, y: number, d: Dir) {
+      if (d === 'left') vW[y][x] = false;
+      if (d === 'right') vW[y][x + 1] = false;
+      if (d === 'up') hW[y][x] = false;
+      if (d === 'down') hW[y + 1][x] = false;
+    }
+    function blocked(x: number, y: number, d: Dir) {
+      if (d === 'left') return vW[y][x];
+      if (d === 'right') return vW[y][x + 1];
+      if (d === 'up') return hW[y][x];
+      return hW[y + 1][x];
+    }
+
+    function reset() {
+      build();
+      px = tx = C >> 1; py = ty = R >> 1; t = 1;
+      dir = want = null; face = 'right'; score = 0; done = false;
+      pellets[py][px] = false;
+      grantedEl.classList.remove('on');
+      scoreEl.textContent = '0000';
+      resize();
+    }
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = stage.clientWidth, h = stage.clientHeight;
+      const portrait = isPortrait();
+      if ((portrait && C !== 9) || (!portrait && C !== 15)) { build(); px = tx = C >> 1; py = ty = R >> 1; t = 1; dir = want = null; pellets[py][px] = false; }
+      cell = Math.max(14, Math.floor(Math.min(w / (C + 2.4), h / (R + 2.4))));
+      const cw = cell * (C + 2.4), ch = cell * (R + 2.4);
+      canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
+      canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ox = cell * 1.2; oy = cell * 1.2;
+    }
+
+    function step() {
+      // hucreye vardik: yon sec
+      if (want && !blocked(px, py, want)) dir = want;
+      if (!dir || blocked(px, py, dir)) { dir = null; return; }
+      face = dir;
+      const nx = px + D[dir][0], ny = py + D[dir][1];
+      if (nx < 0 || ny < 0 || nx >= C || ny >= R) { exit(dir); return; }
+      tx = nx; ty = ny; t = 0;
+    }
+
+    function exit(d: Dir) {
+      done = true;
+      const key = d === 'up' ? 'top' : d === 'down' ? 'bottom' : d;
+      const door = doors[key as keyof typeof doors];
+      grantedEl.textContent = `${root.dataset.granted} › ${door.label}`;
+      grantedEl.classList.add('on');
+      setTimeout(() => {
+        if (door.href.startsWith('#')) close(door.href);
+        else { try { sessionStorage.setItem('maze-seen', '1'); } catch (e) {} location.href = door.href; }
+      }, reduced ? 200 : 750);
+    }
+
+    function loop(now: number) {
+      if (!running) return;
+      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      if (!done) {
+        if (t >= 1) step();
+        else {
+          t += dt * SPEED;
+          if (t >= 1) {
+            t = 1; px = tx; py = ty;
+            if (pellets[py][px]) { pellets[py][px] = false; score += 10; scoreEl.textContent = String(score).padStart(4, '0'); }
+            step();
+          }
+        }
+      }
+      draw(now);
+      requestAnimationFrame(loop);
+    }
+
+    function draw(now: number) {
+      const w = canvas.width, h = canvas.height;
+      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, w, h); ctx.restore();
+
+      // duvarlar
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#5b87ff';
+      ctx.lineWidth = Math.max(2, cell * 0.12);
+      ctx.shadowColor = 'rgba(91,135,255,.9)'; ctx.shadowBlur = cell * 0.5;
+      ctx.beginPath();
+      for (let y = 0; y < R; y++) for (let x = 0; x <= C; x++) if (vW[y][x]) {
+        ctx.moveTo(ox + x * cell, oy + y * cell); ctx.lineTo(ox + x * cell, oy + (y + 1) * cell);
+      }
+      for (let y = 0; y <= R; y++) for (let x = 0; x < C; x++) if (hW[y][x]) {
+        ctx.moveTo(ox + x * cell, oy + y * cell); ctx.lineTo(ox + (x + 1) * cell, oy + y * cell);
+      }
+      ctx.stroke();
+
+      // yemler
+      ctx.shadowBlur = 0; ctx.fillStyle = 'rgba(232,232,242,.75)';
+      for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) if (pellets[y][x]) {
+        ctx.beginPath(); ctx.arc(ox + (x + .5) * cell, oy + (y + .5) * cell, Math.max(1.5, cell * 0.07), 0, Math.PI * 2); ctx.fill();
+      }
+
+      // kapi etiketleri
+      const pulse = reduced ? 1 : 0.8 + 0.2 * Math.sin(now / 260);
+      ctx.font = `800 ${Math.max(9, cell * 0.42)}px Orbitron, "JetBrains Mono", monospace`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = `rgba(180,149,255,${pulse})`; ctx.shadowColor = 'rgba(166,133,255,.9)'; ctx.shadowBlur = cell * 0.4;
+      const cx = ox + (C / 2) * cell, cy = oy + (R / 2) * cell;
+      ctx.fillText(doors.top.label, cx, oy - cell * 0.6);
+      ctx.fillText(doors.bottom.label, cx, oy + R * cell + cell * 0.62);
+      for (const [side, x] of [['left', ox - cell * 0.6], ['right', ox + C * cell + cell * 0.6]] as const) {
+        ctx.save(); ctx.translate(x, cy); ctx.rotate(side === 'left' ? -Math.PI / 2 : Math.PI / 2);
+        ctx.fillText(doors[side].label, 0, 0); ctx.restore();
+      }
+
+      // oyuncu (pac-man)
+      const ix = px + (tx - px) * (t >= 1 ? 0 : t), iy = py + (ty - py) * (t >= 1 ? 0 : t);
+      const x = ox + (ix + .5) * cell, y = oy + (iy + .5) * cell;
+      const mouth = reduced ? 0.25 : 0.08 + 0.22 * Math.abs(Math.sin(now / 90));
+      const ang = { right: 0, down: Math.PI / 2, left: Math.PI, up: -Math.PI / 2 }[face];
+      ctx.fillStyle = '#ffd84d'; ctx.shadowColor = 'rgba(255,216,77,.85)'; ctx.shadowBlur = cell * 0.5;
+      ctx.beginPath(); ctx.moveTo(x, y);
+      ctx.arc(x, y, cell * 0.36, ang + mouth * Math.PI, ang - mouth * Math.PI + Math.PI * 2);
+      ctx.closePath(); ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    // --- girdiler ---
+    const KEYS: Record<string, Dir> = {
+      ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
+      w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right',
+    };
+    window.addEventListener('keydown', (e) => {
+      if (!document.documentElement.classList.contains('intro-on')) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      const d = KEYS[e.key];
+      if (d) { e.preventDefault(); want = d; }
+    });
+    let sx = 0, sy = 0;
+    canvas.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+    canvas.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 18) return;
+      want = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+    }, { passive: true });
+    root.querySelectorAll<HTMLButtonElement>('[data-dir]').forEach((b) =>
+      b.addEventListener('pointerdown', (e) => { e.preventDefault(); want = b.dataset.dir as Dir; }));
+    root.querySelector('[data-skip]')!.addEventListener('click', () => close());
+    root.querySelectorAll<HTMLAnchorElement>('[data-door-link]').forEach((a) =>
+      a.addEventListener('click', (e) => {
+        try { sessionStorage.setItem('maze-seen', '1'); } catch (er) {}
+        if (a.getAttribute('href')!.startsWith('#')) { e.preventDefault(); close(a.getAttribute('href')!); }
+      }));
+    document.querySelectorAll<HTMLElement>('[data-open-maze]').forEach((b) => b.addEventListener('click', open));
+    window.addEventListener('resize', () => { if (running) resize(); });
+
+    if (document.documentElement.classList.contains('intro-on')) {
+      // font yuklenince etiketler dogru cizilsin
+      (document as any).fonts?.load?.('800 16px Orbitron').catch(() => {});
+      open();
+    }
+  }
+</script>
