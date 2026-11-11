@@ -2,7 +2,6 @@
 import Base from '../../layouts/Base.astro';
 import Icon from '../Icon.astro';
 import PostList from '../PostList.astro';
-import MazeIntro from '../MazeIntro.astro';
 import { t, profile, routes, url, type Lang } from '../../i18n';
 import { getPosts } from '../../lib/posts';
 interface Props { lang: Lang }
@@ -13,7 +12,6 @@ const now = s.experience[0];
 const lessLabel = lang === 'tr' ? 'Daha az göster' : 'Show less';
 ---
 <Base lang={lang} current="home">
-  <MazeIntro lang={lang} />
   <div class="wrap">
     <section class="hero">
       <p class="now"><span class="dot" aria-hidden="true"></span><span class="now-label">{s.sections.now}</span> {now.title.split(',')[0]} · {now.org}</p>
@@ -33,7 +31,6 @@ const lessLabel = lang === 'tr' ? 'Daha az göster' : 'Show less';
           <li><a href={x.href} rel="me noopener" target="_blank" aria-label={x.label} title={x.label}><Icon name={x.key} size={20} /></a></li>
         ))}
       </ul>
-      <button class="maze-replay" type="button" data-open-maze>&gt; {lang === 'tr' ? 'labirenti aç' : 'open the maze'}<span aria-hidden="true">_</span></button>
     </section>
 
     <section aria-labelledby="exp">
@@ -206,11 +203,4 @@ const lessLabel = lang === 'tr' ? 'Daha az göster' : 'Show less';
     .two { grid-template-columns: 1fr; gap: 48px; }
     .chips li { font-size: 0.84rem; padding: 4px 11px; }
   }
-  .maze-replay {
-    margin-top: 18px; padding: 0; border: 0; background: none; cursor: pointer;
-    font: 500 0.82rem var(--mono); color: var(--faint); letter-spacing: .02em;
-  }
-  .maze-replay:hover { color: var(--accent-2); }
-  .maze-replay span { animation: replay-blink 1s steps(1) infinite; }
-  @keyframes replay-blink { 50% { opacity: 0; } }
 </style>
